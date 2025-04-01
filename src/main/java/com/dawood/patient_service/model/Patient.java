@@ -24,6 +24,7 @@ public class Patient {
     private String name;
 
     @NotNull(message = "Email is required")
+    @Column(unique = true)
     private String email;
 
     @NotNull( message="Address is required")
