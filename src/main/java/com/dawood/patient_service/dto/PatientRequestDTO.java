@@ -1,11 +1,10 @@
 package com.dawood.patient_service.dto;
 
+import com.dawood.patient_service.dto.validators.PatientCreateRequestGroup;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -25,7 +24,7 @@ public class PatientRequestDTO {
     @NotBlank(message = "Date of birth is required")
     private String dob;
 
-    @NotBlank(message = "Register date is required")
+    @NotBlank(message = "Register date is required",groups = PatientCreateRequestGroup.class)
     private String registeredDate;
 }
 

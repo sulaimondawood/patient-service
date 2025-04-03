@@ -1,0 +1,12 @@
+services:
+  patient-service-db:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: patient_service_db
+    ports:
+      - "5000:5432"
+    volumes:
+      - C:/Users/OLIVER TECH/Desktop/docker/db_volumes/patient-management:/var/lib/postgresql/data
