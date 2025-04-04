@@ -1,6 +1,7 @@
 services:
   patient-service-db:
     image: postgres:latest
+    container_name: patient-service-db
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: admin
@@ -10,3 +11,23 @@ services:
       - "5000:5432"
     volumes:
       - C:/Users/OLIVER TECH/Desktop/docker/db_volumes/patient-management:/var/lib/postgresql/data
+    networks:
+      - internal
+
+  patient-service:
+    build: .
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://patient-service-db:5432/patient_service_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "4000:4000"
+    networks:
+      internal:
+
+networks:
+  internal:
+
+
