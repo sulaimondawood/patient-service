@@ -25,9 +25,10 @@ services:
     ports:
       - "4000:4000"
     networks:
-      internal:
+      - internal
 
 networks:
   internal:
+    external: true
 
 
