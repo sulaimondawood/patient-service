@@ -1,7 +1,7 @@
 package com.dawood.patient_service.grpc;
 
 import billingService.BillingRequest;
-import billingService.BillingRespnse;
+import billingService.BillingResponse;
 import billingService.BillingServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BillingServiceGrpcClient {
+
     private static final Logger log = LoggerFactory.getLogger(BillingServiceGrpcClient.class);
     private final BillingServiceGrpc.BillingServiceBlockingStub billingServiceBlockingStub;
 
@@ -20,23 +21,20 @@ public class BillingServiceGrpcClient {
             @Value("${billing.service.grpc.port:9001}") int billingServerPort
     ){
     log.info("Connecting to Billing Service Service at {}, {}", billingAddress, billingServerPort);
-
         ManagedChannel channel = ManagedChannelBuilder.forAddress(billingAddress, billingServerPort)
                 .usePlaintext().build();
         billingServiceBlockingStub = BillingServiceGrpc.newBlockingStub(channel);
     }
 
-    public BillingRespnse createBillingAccount (String name, String patientId, String email ){
+    public BillingResponse createBillingAccount (String name, String patientId, String email ){
         BillingRequest request = BillingRequest.newBuilder()
                 .setEmail(email)
                 .setName(name)
                 .setPatientId(patientId)
                 .build();
 
-        BillingRespnse response = billingServiceBlockingStub.createBillingAccount(request);
+        BillingResponse response = billingServiceBlockingStub.createBillingAccount(request);
         log.info("Billing service client request connected to the service, {}",response);
         return response;
     }
-
-
 }
