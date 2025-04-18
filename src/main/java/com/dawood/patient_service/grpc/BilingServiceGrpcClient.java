@@ -1,5 +1,6 @@
 package com.dawood.patient_service.grpc;
 
+import billingService.BillingRequest;
 import billingService.BillingRespnse;
 import billingService.BillingServiceGrpc;
 import io.grpc.ManagedChannel;
@@ -26,7 +27,15 @@ public class BillingServiceGrpcClient {
     }
 
     public BillingRespnse createBillingAccount (String name, String patientId, String email ){
+        BillingRequest request = BillingRequest.newBuilder()
+                .setEmail(email)
+                .setName(name)
+                .setPatientId(patientId)
+                .build();
 
+        BillingRespnse response = billingServiceBlockingStub.createBillingAccount(request);
+        log.info("Billing service client request connected to the service, {}",response);
+        return response;
     }
 
 
