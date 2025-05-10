@@ -5,6 +5,7 @@ import com.dawood.patient_service.dto.PatientResponseDTO;
 import com.dawood.patient_service.exceptions.EmailAlreadyExistsException;
 import com.dawood.patient_service.exceptions.PatientNotFoundException;
 import com.dawood.patient_service.grpc.BillingServiceGrpcClient;
+import com.dawood.patient_service.kafka.KafkaProducer;
 import com.dawood.patient_service.mapper.PatientMapper;
 import com.dawood.patient_service.model.Patient;
 import com.dawood.patient_service.repository.PatientRepository;
@@ -23,7 +24,7 @@ public class PatientService {
     private static final Logger log = LoggerFactory.getLogger(PatientService.class);
     private final PatientRepository patientRepository;
     private final BillingServiceGrpcClient billingServiceGrpcClient;
-
+    private final KafkaProducer kafkaProducer;
 
     public List<PatientResponseDTO> findAllPatients(){
         List<Patient> patients = patientRepository.findAll();
@@ -39,7 +40,8 @@ public class PatientService {
         Patient patient =patientRepository.save(newPatient);
         billingServiceGrpcClient.createBillingAccount(patient.getName(), patient.getId().toString(), patient.getEmail());
 
-        log.info("Create patient");
+        kafkaProducer.sendEvent(patient);
+
         return PatientMapper.toDTO(patient);
     }
 
